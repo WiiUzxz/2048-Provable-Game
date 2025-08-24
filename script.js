@@ -9,44 +9,9 @@ let grid = [
   [0,0,0,0]
 ];
 
-
-let timeLeft = 120; // 2 minutes in seconds
+let score = 0;
+let timeLeft = 120; // 2 minutes
 let timerInterval;
-let score = 0; // Add this at the top
-
-function moveLeft(row) {
-  let arr = row.filter(val => val);
-  for(let i=0;i<arr.length-1;i++){
-    if(arr[i] === arr[i+1]){
-      arr[i] *= 2;
-      score += arr[i]; // Add score when tiles merge
-      arr[i+1] = 0;
-    }
-  }
-  arr = arr.filter(val => val);
-  while(arr.length < 4) arr.push(0);
-  return arr;
-}
-
-function drawBoard() {
-  board.innerHTML = '';
-  for(let i=0;i<4;i++){
-    for(let j=0;j<4;j++){
-      const tile = document.createElement('div');
-      const value = grid[i][j];
-      tile.classList.add('tile');
-      if(value) tile.classList.add(`tile-${value}`);
-      tile.textContent = value ? value : '';
-      board.appendChild(tile);
-    }
-  }
-
-  // Display score
-  const scoreDisplay = document.getElementById('score');
-  if(scoreDisplay) scoreDisplay.textContent = `Score: ${score}`;
-}
-// end of scorecode
-
 
 function startGame() {
   grid = [
@@ -55,6 +20,7 @@ function startGame() {
     [0,0,0,0],
     [0,0,0,0]
   ];
+  score = 0;
   addRandomTile();
   addRandomTile();
   drawBoard();
@@ -73,6 +39,7 @@ function drawBoard() {
       board.appendChild(tile);
     }
   }
+  document.getElementById('score').textContent = `Score: ${score}`;
 }
 
 function addRandomTile() {
@@ -92,6 +59,7 @@ function moveLeft(row) {
   for(let i=0;i<arr.length-1;i++){
     if(arr[i] === arr[i+1]){
       arr[i] *= 2;
+      score += arr[i];
       arr[i+1] = 0;
     }
   }
@@ -116,7 +84,7 @@ function rotateGrid() {
 }
 
 function move(direction) {
-  if(timeLeft <= 0) return; // Stop moves if time is up
+  if(timeLeft <= 0) return;
 
   if(direction === 'up'){
     rotateGrid();
@@ -143,7 +111,7 @@ function move(direction) {
 }
 
 document.addEventListener('keydown', e => {
-  if(timeLeft <= 0) return; // Prevent moves when time is up
+  if(timeLeft <= 0) return;
   if(e.key === 'ArrowUp') move('up');
   else if(e.key === 'ArrowDown') move('down');
   else if(e.key === 'ArrowLeft') move('left');
@@ -163,6 +131,7 @@ function startTimer() {
     if(timeLeft <= 0) {
       clearInterval(timerInterval);
       alert("Time's up! Game over.");
+      uploadProof(score); // Upload score to Walrus
     }
   }, 1000);
 }
@@ -171,6 +140,13 @@ function updateTimerDisplay() {
   const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
   const seconds = (timeLeft % 60).toString().padStart(2, '0');
   timerDisplay.textContent = `Time: ${minutes}:${seconds}`;
+}
+
+// Walrus upload stub
+async function uploadProof(score) {
+  console.log("Uploading proof to Walrus...");
+  console.log("Score:", score);
+  // Replace with actual Walrus SDK/API call
 }
 
 startGame();
