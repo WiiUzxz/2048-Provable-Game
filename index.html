@@ -7,14 +7,28 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="game-container">
-    <h1>2048</h1>
-    <div id="timer">Time: 02:00</div>
-    <div id="score">Score: 0</div>
-    <div id="game-board" class="board"></div>
-    <p>Use arrow keys to move tiles.</p>
-    <button id="restart-btn">Restart Game</button>
+ <div class="game-container">
+  <h1>2048</h1>
+  <div id="timer">Time: 02:00</div>
+  <div id="score">Score: 0</div>
+  <div id="game-board" class="board"></div>
+  <p>Use arrow keys to move tiles.</p>
+  <button id="restart-btn">Restart Game</button>
+
+  <!-- Game Complete Overlay -->
+  <div id="game-complete" class="overlay hidden">
+    <h2>♛ Game Complete!</h2>
+    <p id="congrats-msg"></p>
+    <div class="info-box">
+      <p><strong>GAME TYPE:</strong> 2048</p>
+      <p><strong>DURATION:</strong> <span id="game-duration">0</span>s</p>
+      <p><strong>GAME ID:</strong> <span id="game-id"></span></p>
+    </div>
+    <p id="upload-status">Generating proof and uploading to Walrus... ⏳</p>
+    <button id="check-status-btn">Check Status</button>
   </div>
+</div>
+
 
   <script src="script.js"></script>
 </body>
