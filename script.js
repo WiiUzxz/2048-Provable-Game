@@ -1,5 +1,6 @@
 const board = document.getElementById('game-board');
 const restartBtn = document.getElementById('restart-btn');
+const timerDisplay = document.getElementById('timer');
 
 let grid = [
   [0,0,0,0],
@@ -7,6 +8,9 @@ let grid = [
   [0,0,0,0],
   [0,0,0,0]
 ];
+
+let timeLeft = 120; // 2 minutes in seconds
+let timerInterval;
 
 function startGame() {
   grid = [
@@ -18,6 +22,7 @@ function startGame() {
   addRandomTile();
   addRandomTile();
   drawBoard();
+  startTimer();
 }
 
 function drawBoard() {
@@ -75,14 +80,13 @@ function rotateGrid() {
 }
 
 function move(direction) {
-  let rotated = false;
+  if(timeLeft <= 0) return; // Stop moves if time is up
+
   if(direction === 'up'){
     rotateGrid();
-    rotated = true;
   } else if(direction === 'down'){
     rotateGrid();
     grid = grid.map(row => row.reverse());
-    rotated = true;
   } else if(direction === 'right'){
     grid = grid.map(row => row.reverse());
   }
@@ -91,7 +95,6 @@ function move(direction) {
 
   if(direction === 'up'){
     rotateGrid();
-    rotated = false;
   } else if(direction === 'down'){
     grid = grid.map(row => row.reverse());
     rotateGrid();
@@ -104,6 +107,7 @@ function move(direction) {
 }
 
 document.addEventListener('keydown', e => {
+  if(timeLeft <= 0) return; // Prevent moves when time is up
   if(e.key === 'ArrowUp') move('up');
   else if(e.key === 'ArrowDown') move('down');
   else if(e.key === 'ArrowLeft') move('left');
@@ -112,5 +116,25 @@ document.addEventListener('keydown', e => {
 
 restartBtn.addEventListener('click', startGame);
 
-startGame();
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 120;
+  updateTimerDisplay();
 
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft <= 0) {
+      clearInterval(timerInterval);
+      alert("Time's up! Game over.");
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+  const seconds = (timeLeft % 60).toString().padStart(2, '0');
+  timerDisplay.textContent = `Time: ${minutes}:${seconds}`;
+}
+
+startGame();
