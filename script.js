@@ -9,8 +9,44 @@ let grid = [
   [0,0,0,0]
 ];
 
+
 let timeLeft = 120; // 2 minutes in seconds
 let timerInterval;
+let score = 0; // Add this at the top
+
+function moveLeft(row) {
+  let arr = row.filter(val => val);
+  for(let i=0;i<arr.length-1;i++){
+    if(arr[i] === arr[i+1]){
+      arr[i] *= 2;
+      score += arr[i]; // Add score when tiles merge
+      arr[i+1] = 0;
+    }
+  }
+  arr = arr.filter(val => val);
+  while(arr.length < 4) arr.push(0);
+  return arr;
+}
+
+function drawBoard() {
+  board.innerHTML = '';
+  for(let i=0;i<4;i++){
+    for(let j=0;j<4;j++){
+      const tile = document.createElement('div');
+      const value = grid[i][j];
+      tile.classList.add('tile');
+      if(value) tile.classList.add(`tile-${value}`);
+      tile.textContent = value ? value : '';
+      board.appendChild(tile);
+    }
+  }
+
+  // Display score
+  const scoreDisplay = document.getElementById('score');
+  if(scoreDisplay) scoreDisplay.textContent = `Score: ${score}`;
+}
+// end of scorecode
+
 
 function startGame() {
   grid = [
